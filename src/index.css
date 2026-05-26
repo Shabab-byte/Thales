@@ -1,0 +1,21 @@
+@import "tailwindcss";
+
+  @keyframes pulse1 {
+    0%, 100% { transform: scale(1); box-shadow: 0 0 1px #0096FF; background-color: #00d9ff; }
+    50% { transform: scale(1.08); box-shadow: 0 0 3px #7DF9FF; background-color: #08c0f3; }
+  }
+  
+/*.animate-pulse1 {
+  animation: pulse1 2s infinite;
+}*/
+
+@keyframes pulse-sonar {
+  0% {
+    /* Starts solid and tight to the border */
+    box-shadow: 0 0 0 0 rgba(139, 92, 246, 0.7); 
+  }
+  70%, 100% {
+    /* Expands far out and fades completely to 0 opacity */
+    box-shadow: 0 0 0 8px rgba(139, 92, 246, 0); 
+  }
+}
