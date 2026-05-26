@@ -14,7 +14,7 @@ export default function Sidebar(){
   return (
     <aside className="w-60 h-screen bg-white border-r border-gray-200 flex flex-col justify-between">
       <div className="px-6 py-5 border-b border-gray-100">
-        <h1 className="text-xl font-bold text-indigo-600 tracking-tight"> Knowtico </h1>
+        <h1 className="text-xl font-bold text-indigo-600 tracking-tight"> Thales </h1>
         <p className="text-xs text-gray-400 mt-0.5">Your AI study partner</p>
       </div>
       <nav className="flex-1 px-3 py-4 space-y-1">
