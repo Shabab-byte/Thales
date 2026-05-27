@@ -142,7 +142,7 @@ export default function Flashcards() {
       // console.log(`set lastNotes to ${modeOfCards === 'section' ? 'lastNotesGuide' : 'notes'}, set lastCardsMetaData to ${modeOfCards === 'section' ? `{type: 'section', stepTitle: ${activeStep?.title}}` : `{type: 'full', stepTitle: ''}`}`)
       resetReview()
     } catch (err) {
-      setError('Failed to generate flashcards. Try again.')
+      setError('Failed to generate flashcards. Check your API key or try again.')
       console.error(err)
     } finally {
       setLoading(false)
@@ -264,7 +264,7 @@ export default function Flashcards() {
             </div>
           </div>
         )}
-        {error && <p className="text-red-500 text-sm mt-4 text-center">{error}</p>}
+        {error && <p className="text-sm text-red-500 bg-red-50 px-3 py-2 rounded-lg fixed bottom-4 right-4 z-50">{error}</p>}
       </div>
     )
   }
@@ -357,7 +357,7 @@ export default function Flashcards() {
             ))}
           </div>
 
-          {error && <p className="text-red-500 text-sm mt-4 text-center fixed bottom-4 right-4 z-50">{error}</p>}
+          {error && <p className="text-sm text-red-500 bg-red-50 px-3 py-2 rounded-lg fixed bottom-4 right-4 z-50">{error}</p>}
         </div>
       </>
     )

@@ -2,7 +2,6 @@
 // generate button appears only after writing 200+ characters
 // improve on given notes, idenfitify errors or faulty ideas in notes
 // live lecture input
-// change the buttons
 
 import { useState,useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
@@ -148,58 +147,61 @@ export default function Notes() {
             </button>
           ))}
         </div>
+
           {error && (
-            <p className="text-sm text-red-500 bg-red-50 px-3 py-2 rounded-lg">{error}</p>
+            <p className="text-sm text-red-500 bg-red-50 px-3 py-2 rounded-lg fixed bottom-4 right-4 z-50">{error}</p>
           )}
+          
+      </div>
+
+      {/* Summary */}
+      <div className="w-1/2 flex flex-col">
+        {/* Notes-changed warning banner */}
+        <div className={`shrink-0 overflow-hidden transition-all duration-300 ${ notesChanged ? 'max-h-24 opacity-100' : 'max-h-0 opacity-0' }`}>
+          <div className="shrink-0 bg-amber-50 border-b border-amber-200 px-5 py-2.5 flex items-center justify-between gap-4">
+            <div className="flex items-center gap-2">
+              <AlertTriangle size={14} className="text-amber-500 shrink-0" />
+              <p className="text-xs text-amber-800">
+                Your notes have changed since this was generated.
+              </p>
+            </div>
+            <div className="flex items-center gap-2 shrink-0">
+              <button
+                onClick={() => setNotesChanged(false)}
+                className="text-xs text-amber-600 hover:text-amber-800 px-2 py-1 transition-colors cursor-pointer"
+              >
+                Dismiss
+              </button>
+              <button
+                onClick={handleSummary}
+                disabled={loading}
+                className="text-xs font-medium bg-amber-500 text-white px-3 py-1.5 rounded-lg hover:bg-amber-600 transition-colors cursor-pointer disabled:bg-gray-200 disabled:text-gray-400 disabled:pointer-events-none"
+              >
+                Regenerate
+              </button>
+            </div>
+          </div>
         </div>
 
-        {/* Summary */}
-        <div className="w-1/2 flex flex-col">
-          {/* Notes-changed warning banner */}
-          <div className={`shrink-0 overflow-hidden transition-all duration-300 ${ notesChanged ? 'max-h-24 opacity-100' : 'max-h-0 opacity-0' }`}>
-            <div className="shrink-0 bg-amber-50 border-b border-amber-200 px-5 py-2.5 flex items-center justify-between gap-4">
-              <div className="flex items-center gap-2">
-                <AlertTriangle size={14} className="text-amber-500 shrink-0" />
-                <p className="text-xs text-amber-800">
-                  Your notes have changed since this was generated.
-                </p>
-              </div>
-              <div className="flex items-center gap-2 shrink-0">
-                <button
-                  onClick={() => setNotesChanged(false)}
-                  className="text-xs text-amber-600 hover:text-amber-800 px-2 py-1 transition-colors cursor-pointer"
-                >
-                  Dismiss
-                </button>
-                <button
-                  onClick={handleSummary}
-                  disabled={loading}
-                  className="text-xs font-medium bg-amber-500 text-white px-3 py-1.5 rounded-lg hover:bg-amber-600 transition-colors cursor-pointer disabled:bg-gray-200 disabled:text-gray-400 disabled:pointer-events-none"
-                >
-                  Regenerate
-                </button>
-              </div>
-            </div>
+        <div className="flex items-center justify-between px-5 py-6 border-b border-gray-100">
+          <div className="flex items-center gap-2 text-indigo-500">
+            <FileText size={16} strokeWidth={1.8} />
+            <span className="text-sm font-semibold tracking-wide text-gray-500">
+              Summary
+            </span>
           </div>
-          <div className="flex items-center justify-between px-5 py-6 border-b border-gray-100">
-            <div className="flex items-center gap-2 text-indigo-500">
-              <FileText size={16} strokeWidth={1.8} />
-              <span className="text-sm font-semibold tracking-wide text-gray-500">
-                Summary
-              </span>
-            </div>
-            <button
-              onClick={() => handleSummary()}
-              disabled={loading}
-              className="cursor-pointer flex items-center gap-1.5 px-3 py-1.5 rounded-md text-xs font-medium 
-                        bg-indigo-50 text-indigo-600 border border-indigo-100
-                        hover:bg-indigo-100 hover:border-indigo-200
-                        active:scale-95 transition-all duration-150 disabled:bg-gray-200 disabled:text-gray-400 disabled:pointer-events-none"
-            >
-              <RefreshCw size={12} strokeWidth={2} />
-              {result?'Regenerate':'Generate'}
-            </button>
-          </div>
+          <button
+            onClick={() => handleSummary()}
+            disabled={loading}
+            className="cursor-pointer flex items-center gap-1.5 px-3 py-1.5 rounded-md text-xs font-medium 
+                      bg-indigo-50 text-indigo-600 border border-indigo-100
+                      hover:bg-indigo-100 hover:border-indigo-200
+                      active:scale-95 transition-all duration-150 disabled:bg-gray-200 disabled:text-gray-400 disabled:pointer-events-none"
+          >
+            <RefreshCw size={12} strokeWidth={2} />
+            {result?'Regenerate':'Generate'}
+          </button>
+        </div>
 
         {loading && (
           <div className="flex items-center gap-2 px-5 py-6 text-sm text-gray-400">
