@@ -5,6 +5,8 @@
 // MindMap+Timeline+FLOWCHART
 // Diagram+labelling+figure system
 // Comparison + Cause-Effect+Quick-Glance Table
+// back to study-guide button for all pages
+// integration with calender + spaced repition reminder
 import Sidebar from './components/layout/Sidebar'
 import Dashboard from './pages/Dashboard'
 import Flashcards from './pages/Flashcards'
@@ -12,6 +14,7 @@ import MindMap from './pages/MindMap'
 import Notes from './pages/Notes'
 import Quiz from './pages/Quiz'
 import StudyGuide from './pages/StudyGuide'
+import Context from './pages/Context'
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 
 export default function App() {
@@ -27,6 +30,7 @@ export default function App() {
             <Route path='/notes' element={<Notes/>} />
             <Route path='/quiz' element={<Quiz/>} />
             <Route path='/study-guide' element={<StudyGuide/>} />
+            <Route path='/context' element={<Context/>} />
           </Routes>
         </main>
       </div>

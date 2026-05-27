@@ -1,6 +1,7 @@
+// display important pages first
 import { useLocalStorage } from '../hooks/useLocalStorage'
 import { useNavigate } from 'react-router-dom'
-import { FileText, CreditCard, BrainCircuit, BookOpen, Sparkles, ArrowRight } from 'lucide-react'
+import { FileText, GalleryHorizontalEnd, BrainCircuit, BookOpen, NotebookPen, ArrowRight } from 'lucide-react'
 
 const quickActions = [
   {
@@ -12,7 +13,7 @@ const quickActions = [
     bg: 'bg-blue-50',
   },
   {
-    icon: CreditCard,
+    icon: GalleryHorizontalEnd,
     label: 'Flashcards',
     description: 'Review with AI-generated cards',
     to: '/flashcards',
@@ -66,6 +67,7 @@ export default function Dashboard() {
         Quick Actions
       </h2>
       <div className="grid grid-cols-2 gap-4 mb-8">
+        {/* eslint-disable-next-line no-unused-vars */}
         {quickActions.map(({ icon: Icon, label, description, to, color, bg }) => (
           <button
             key={to}
@@ -95,7 +97,7 @@ export default function Dashboard() {
             className="bg-white border border-gray-200 rounded-xl p-4 cursor-pointer hover:border-indigo-300 transition-all"
           >
             <div className="flex items-center gap-2 mb-2">
-              <Sparkles size={14} className="text-indigo-400" />
+              <NotebookPen size={14} className="text-indigo-400" />
               <span className="text-xs text-indigo-400 font-medium">Click to edit</span>
             </div>
             <p className="text-sm text-gray-600 leading-relaxed line-clamp-4">
@@ -108,7 +110,7 @@ export default function Dashboard() {
       {/* Empty state */}
       {!notes.trim() && (
         <div className="text-center py-12 bg-white border border-dashed border-gray-200 rounded-xl">
-          <Sparkles size={32} className="text-indigo-200 mx-auto mb-3" />
+          <NotebookPen size={32} className="text-indigo-200 mx-auto mb-3" />
           <p className="text-gray-500 text-sm font-medium">No notes yet</p>
           <p className="text-gray-400 text-xs mt-1 mb-4">Start by adding your study material</p>
           <button

@@ -6,9 +6,9 @@ import { useLocation, useNavigate } from 'react-router-dom'
 import { useLocalStorage } from '../hooks/useLocalStorage'
 import { callGemini } from '../lib/gemini'
 import {
-  Loader2, Sparkles, ChevronLeft, ChevronRight, RotateCcw,
+  Loader2, ChevronLeft, ChevronRight, RotateCcw,
   CheckCircle, XCircle, RefreshCw, Clock, Lightbulb, Brain,
-  Timer, Trophy, AlertTriangle, Focus
+  Timer, Trophy, AlertTriangle, Focus, BrainCircuit
 } from 'lucide-react'
 
 
@@ -575,7 +575,7 @@ function ConfigScreen({
           <div className="flex items-center gap-2">
             <AlertTriangle size={14} className="text-amber-500 shrink-0" />
             <p className="text-xs text-amber-800">
-              Your notes have changed since this guide was generated.
+              Your notes have changed since this was generated.
             </p>
           </div>
           <div className="flex items-center gap-2 shrink-0">
@@ -595,8 +595,9 @@ function ConfigScreen({
         </div>
       </div>
       <div className="p-6 max-w-2xl mx-auto">
-        <h2 className="text-xl font-bold text-gray-800 mb-0.5">Quiz</h2>
-        <p className="text-sm text-gray-400 mb-4">
+        <BrainCircuit size={24} className="inline text-indigo-500 mb-1" />
+        <h2 className="ml-2 inline text-xl font-bold text-gray-800 mb-0.5">Quiz</h2>
+        <p className="ml-9 text-sm text-gray-400 mb-4">
           Test your knowledge
         </p>
         <div className="flex flex-col gap-2">
@@ -691,7 +692,7 @@ function ConfigScreen({
                 onClick={onStart}
                 className="flex-1 flex items-center justify-center gap-2 py-3 bg-indigo-600 text-white text-sm font-medium rounded-xl cursor-pointer hover:bg-indigo-700 transition-colors"
               >
-                <Sparkles size={14} /> Start Quiz ({questions.length} Qs)
+                <BrainCircuit size={14} /> Start Quiz ({questions.length} Qs)
               </button>
             )}
             <button

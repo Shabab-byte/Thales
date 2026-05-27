@@ -9,7 +9,7 @@ import { useNavigate } from 'react-router-dom'
 import { useLocalStorage } from '../hooks/useLocalStorage'
 import { callGemini } from '../lib/gemini'
 import {
-  Loader2, Sparkles, RefreshCw, BookOpen, Brain,
+  Loader2, RefreshCw, BookOpen, Brain,
   CheckCircle, Circle, Lightbulb, AlertTriangle,
   Target, Clock, Zap, ArrowRight, Trophy, ChevronRight, GraduationCap, Info,
 } from 'lucide-react'
@@ -196,7 +196,7 @@ export default function StudyGuide() {
     )
   }
 
-  if (!guide || !notes.trim()) {
+  if (!guide) {
     return <EmptyState notes={notes} error={error} onGenerate={generateGuide} navigate={navigate} />
   }
 
@@ -239,6 +239,7 @@ export default function StudyGuide() {
         <div className="flex items-start justify-between gap-4 mb-0.5">
           <div className="flex-1 min-w-0">
             <div className="flex items-center gap-2 mb-0.5 flex-wrap">
+              <BookOpen size={20} className="text-indigo-500 mt-0.5" />
               <h2 className="text-lg font-bold text-gray-800">{guide.subject}</h2>
               <span className="text-xs px-2 py-0.5 bg-indigo-50 text-indigo-600 rounded-full font-medium shrink-0">
                 {completedCount} / {totalSteps} steps
@@ -274,13 +275,20 @@ export default function StudyGuide() {
 
         {/* Prerequisite warning */}
         {guide.prerequisiteWarning && (
-          <div className="mt-3 bg-blue-50 border border-blue-200 rounded-xl px-3 py-2.5 flex items-start gap-2">
-            <Info size={13} className="text-blue-500 mt-0.5 shrink-0" />
-            <p className="text-xs text-blue-700">
-              <span className="font-semibold">Before you start: </span>
-              {guide.prerequisiteWarning}
-            </p>
-          </div>
+        <div className="mt-3 bg-blue-50 border border-blue-200 rounded-xl px-3 py-2.5 flex items-start gap-2">
+          <Info size={13} className="text-blue-500 mt-0.5 shrink-0" />
+          <p className="text-xs text-blue-700 leading-normal">
+            <span className="font-semibold">Before you start: </span>
+            {guide.prerequisiteWarning}{" "}
+            <button  
+              className="inline-flex items-center font-semibold text-blue-600 hover:text-blue-800 underline decoration-blue-600 decoration-blue-300 hover:decoration-blue-800 transition-colors cursor-pointer"
+              onClick={() => navigate('/context', { state: { autoGen: true } })}
+            >
+              Read more
+              <ChevronRight size={12} className='mt-0.5'/>
+            </button>
+          </p>
+        </div>
         )}
       </div>
 
@@ -540,8 +548,9 @@ function ActiveStepDetail({ step, stepNumber, totalSteps, done, onToggle, onNavi
 function EmptyState({ notes, error, onGenerate, navigate }) {
   return (
     <div className="p-6 max-w-2xl mx-auto">
-      <h2 className="text-xl font-bold text-gray-800 mb-1">Study Guide</h2>
-      <p className="text-sm text-gray-400 mb-8">
+      <BookOpen size={24} className="inline text-indigo-500 mb-1" />
+      <h2 className="ml-2 inline text-xl font-bold text-gray-800 mb-1">Study Guide</h2>
+      <p className="text-sm text-gray-400 mb-8 ml-9">
         A personalised, step-by-step plan to master your material
       </p>
 
@@ -559,7 +568,7 @@ function EmptyState({ notes, error, onGenerate, navigate }) {
         </div>
       ) : (
         <div className="text-center py-16 border border-dashed border-gray-200 rounded-xl bg-white">
-          <Sparkles size={32} className="text-indigo-200 mx-auto mb-3" />
+          <BookOpen size={32} className="text-indigo-200 mx-auto mb-3" />
           <p className="text-gray-500 text-sm font-medium mb-1">No study guide yet</p>
           <p className="text-gray-400 text-xs mb-5 max-w-xs mx-auto">
             Generate a personalised mastery plan based on your notes — step-by-step, with expert advice for this specific material.

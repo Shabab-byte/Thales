@@ -4,7 +4,7 @@ import { useState, useRef, useEffect } from 'react'
 import { useNavigate, useLocation } from 'react-router-dom'
 import { useLocalStorage } from '../hooks/useLocalStorage'
 import { callGemini } from '../lib/gemini'
-import { Loader2, Sparkles, ChevronLeft, ChevronRight, RotateCcw, CheckCircle, XCircle, RefreshCw, AlertTriangle, Focus } from 'lucide-react'
+import { Loader2, ChevronLeft, ChevronRight, RotateCcw, CheckCircle, XCircle, RefreshCw, AlertTriangle, Focus, GalleryHorizontalEnd } from 'lucide-react'
 
 function buildFlashcardsPrompt(notes) {
   return `You are an expert educator building flashcards for active recall practice. Create flashcards from these study notes. Return ONLY a raw JSON array, no markdown, no explanation:
@@ -201,12 +201,13 @@ export default function Flashcards() {
   if (!cards.length) {
     return (
       <div className="p-6 max-w-2xl mx-auto">
-        <h2 className="text-xl font-bold text-gray-800 mb-1">Flashcards</h2>
-        <p className="text-sm text-gray-400">AI-generated cards from your notes</p>
+        <GalleryHorizontalEnd size={24} className="inline text-indigo-500 mb-1" />
+        <h2 className="ml-2 inline text-xl font-bold text-gray-800 mb-1">Flashcards</h2>
+        <p className="ml-9 text-sm text-gray-400">AI-generated cards from your notes</p>
 
         {!notes.trim() ? (
           <div className="text-center py-16 border border-dashed border-gray-200 rounded-xl bg-white mt-8">
-            <Sparkles size={32} className="text-indigo-200 mx-auto mb-3" />
+            <GalleryHorizontalEnd size={32} className="text-indigo-200 mx-auto mb-3" />
             <p className="text-gray-500 text-sm font-medium">No notes found</p>
             <p className="text-gray-400 text-xs mt-1">Go to Notes and add your study material first</p>
             <button
@@ -252,7 +253,7 @@ export default function Flashcards() {
               </p>
             </div>
             <div className="text-center py-16 border border-dashed border-gray-200 rounded-xl bg-white">
-              <Sparkles size={32} className="text-indigo-200 mx-auto mb-3" />
+              <GalleryHorizontalEnd size={32} className="text-indigo-200 mx-auto mb-3" />
               <p className="text-gray-500 text-sm font-medium mb-4">No flashcards yet</p>
               <button
                 onClick={() => generateCards()}
@@ -276,7 +277,7 @@ export default function Flashcards() {
             <div className="flex items-center gap-2">
               <AlertTriangle size={14} className="text-amber-500 shrink-0" />
               <p className="text-xs text-amber-800">
-                Your notes have changed since this guide was generated.
+                Your notes have changed since this was generated.
               </p>
             </div>
             <div className="flex items-center gap-2 shrink-0">
@@ -298,8 +299,9 @@ export default function Flashcards() {
         <div className="p-6 max-w-2xl mx-auto">
           <div className="flex items-center justify-between mb-1">
             <div>
-              <h2 className="text-xl font-bold text-gray-800">Flashcards</h2>
-              <p className="text-sm text-gray-400">{cards.length} cards generated</p>
+              <GalleryHorizontalEnd size={24} className="inline text-indigo-500 mb-1" />
+              <h2 className="ml-2 inline text-xl font-bold text-gray-800">Flashcards</h2>
+              <p className="ml-9 text-sm text-gray-400">{cards.length} cards generated</p>
             </div>
             <div className="flex gap-2">
               <button
@@ -312,7 +314,7 @@ export default function Flashcards() {
                 onClick={startReview}
                 className="flex items-center gap-2 px-4 py-2 bg-indigo-600 text-white text-sm font-medium rounded-lg hover:bg-indigo-700 transition-colors cursor-pointer"
               >
-                <Sparkles size={14} /> Start Review
+                <GalleryHorizontalEnd size={14} /> Start Review
               </button>
             </div>
           </div>

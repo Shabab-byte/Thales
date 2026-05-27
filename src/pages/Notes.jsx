@@ -2,18 +2,47 @@
 // generate button appears only after writing 200+ characters
 // improve on given notes, idenfitify errors or faulty ideas in notes
 // live lecture input
+// change the buttons
 
 import { useState,useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { Sparkles, Loader2, ScrollText, ArrowRight, FileText, AlertTriangle } from 'lucide-react'
+import { Loader2, ScrollText, ArrowRight, FileText, AlertTriangle, RefreshCw, GalleryHorizontalEnd, BrainCircuit, BookOpen, NotebookPen } from 'lucide-react'
 import { useLocalStorage } from '../hooks/useLocalStorage'
 import { callGemini } from '../lib/gemini'
 
-const ACTIONS = [
-  { key: '/mindmap', label: '✦ Mind Map' },
-  { key: '/flashcards', label: '🃏 Flashcards' },
-  { key: '/quiz', label: '🧠 Quiz Me' },
-  { key: '/study-guide', label: '📖 Study Guide' },
+const actions = [
+  {
+    key: '/study-guide',
+    icon: BookOpen,
+    label: 'Study Guide',
+    description: 'Structured learning breakdown',
+    color: 'text-orange-500',
+    bg: 'bg-orange-50',
+  },
+  {
+    key: '/mindmap',
+    icon: FileText,
+    label: 'Mind Map',
+    description: 'Review with AI-generated Mind Map',
+    color: 'text-blue-500',
+    bg: 'bg-blue-50',
+  },
+  {
+    key: '/flashcards',
+    icon: GalleryHorizontalEnd,
+    label: 'Flashcards',
+    description: 'Review with AI-generated cards',
+    color: 'text-purple-500',
+    bg: 'bg-purple-50',
+  },
+  {
+    key: '/quiz',
+    icon: BrainCircuit,
+    label: 'Quiz',
+    description: 'Test your knowledge',
+    color: 'text-green-500',
+    bg: 'bg-green-50',
+  },
 ]
 
 function buildPrompt(notes) {
@@ -83,85 +112,94 @@ export default function Notes() {
     <div className="flex h-full">
 
       {/* Left panel — note input */}
-      <div className="w-1/2 flex flex-col border-r border-gray-200 p-6 gap-4">
+      <div className="w-1/2 flex flex-col border-r border-gray-200 p-6 gap-4 overflow-y-auto [scrollbar-width:thin]">
         <div className="flex items-center gap-2">
           <ScrollText size={20} className="text-indigo-500" />
-          <h2 className="text-lg font-semibold text-indigo-500">Your Notes</h2>
+          <h2 className="text-lg font-bold text-gray-700">Your Notes</h2>
         </div>
-
+        {/* min-h essential */}
         <textarea
-          className="flex-1 w-full rounded-xl border border-gray-200 bg-gray-50 p-4 text-sm text-gray-700 resize-none focus:outline-none focus:ring-2 focus:ring-indigo-300 focus:border-transparent"
+          className="min-h-3/4 w-full rounded-xl border border-gray-200 bg-gray-50 p-4 text-sm text-gray-700 resize-none focus:outline-none focus:ring-2 focus:ring-indigo-300 focus:border-transparent"
           placeholder="Paste or type your study notes here...&#10;&#10;Example: Chapter 3 - The water cycle involves evaporation, condensation, and precipitation..."
           value={notes}
           onChange={(e) => setNotes(e.target.value)}
         />
 
-        <div className="flex flex-wrap gap-2">
-          {ACTIONS.map(({ key, label }) => (
+        {/* Quick actions */}
+        <h2 className="mt-4 text-sm font-semibold text-gray-500 uppercase tracking-wide mb-3">
+          Quick Actions
+        </h2>
+        <div className="grid grid-cols-2 gap-4 mb-3 ">
+          {/* eslint-disable-next-line no-unused-vars */}
+          {actions.map(({ icon: Icon, label, description, key, color, bg }) => (
             <button
               key={key}
               onClick={() => handleAction(key)}
-              className={`cursor-pointer flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-all bg-indigo-600 text-white hover:bg-indigo-700 active:scale-95}`}
+              className="flex items-start gap-4 p-4 bg-white border border-gray-200 rounded-xl hover:border-indigo-300 hover:shadow-sm transition-all text-left group cursor-pointer"
             >
-              {label}
-              <ArrowRight size={14} />
+              <div className={`${bg} ${color} p-2 rounded-lg`}>
+                <Icon size={20} />
+              </div>
+              <div className="flex-1">
+                <p className="text-sm font-semibold text-gray-800">{label}</p>
+                <p className="text-xs text-gray-400 mt-0.5">{description}</p>
+              </div>
+              <ArrowRight size={16} className="text-gray-300 group-hover:text-indigo-400 transition-colors mt-1" />
             </button>
           ))}
         </div>
+          {error && (
+            <p className="text-sm text-red-500 bg-red-50 px-3 py-2 rounded-lg">{error}</p>
+          )}
+        </div>
 
-        {error && (
-          <p className="text-sm text-red-500 bg-red-50 px-3 py-2 rounded-lg">{error}</p>
-        )}
-      </div>
-
-
-      {/* Summary */}
-      <div className="w-1/2 flex flex-col">
-        {/* Notes-changed warning banner */}
-        <div className={`shrink-0 overflow-hidden transition-all duration-300 ${ notesChanged ? 'max-h-24 opacity-100' : 'max-h-0 opacity-0' }`}>
-          <div className="shrink-0 bg-amber-50 border-b border-amber-200 px-5 py-2.5 flex items-center justify-between gap-4">
-            <div className="flex items-center gap-2">
-              <AlertTriangle size={14} className="text-amber-500 shrink-0" />
-              <p className="text-xs text-amber-800">
-                Your notes have changed since this guide was generated.
-              </p>
-            </div>
-            <div className="flex items-center gap-2 shrink-0">
-              <button
-                onClick={() => setNotesChanged(false)}
-                className="text-xs text-amber-600 hover:text-amber-800 px-2 py-1 transition-colors cursor-pointer"
-              >
-                Dismiss
-              </button>
-              <button
-                onClick={handleSummary}
-                disabled={loading}
-                className="text-xs font-medium bg-amber-500 text-white px-3 py-1.5 rounded-lg hover:bg-amber-600 transition-colors cursor-pointer disabled:bg-gray-200 disabled:text-gray-400 disabled:pointer-events-none"
-              >
-                Regenerate
-              </button>
+        {/* Summary */}
+        <div className="w-1/2 flex flex-col">
+          {/* Notes-changed warning banner */}
+          <div className={`shrink-0 overflow-hidden transition-all duration-300 ${ notesChanged ? 'max-h-24 opacity-100' : 'max-h-0 opacity-0' }`}>
+            <div className="shrink-0 bg-amber-50 border-b border-amber-200 px-5 py-2.5 flex items-center justify-between gap-4">
+              <div className="flex items-center gap-2">
+                <AlertTriangle size={14} className="text-amber-500 shrink-0" />
+                <p className="text-xs text-amber-800">
+                  Your notes have changed since this was generated.
+                </p>
+              </div>
+              <div className="flex items-center gap-2 shrink-0">
+                <button
+                  onClick={() => setNotesChanged(false)}
+                  className="text-xs text-amber-600 hover:text-amber-800 px-2 py-1 transition-colors cursor-pointer"
+                >
+                  Dismiss
+                </button>
+                <button
+                  onClick={handleSummary}
+                  disabled={loading}
+                  className="text-xs font-medium bg-amber-500 text-white px-3 py-1.5 rounded-lg hover:bg-amber-600 transition-colors cursor-pointer disabled:bg-gray-200 disabled:text-gray-400 disabled:pointer-events-none"
+                >
+                  Regenerate
+                </button>
+              </div>
             </div>
           </div>
-        </div>
-        <div className="flex items-center justify-between px-5 py-6 border-b border-gray-100">
-          <div className="flex items-center gap-2 text-indigo-500">
-            <FileText size={16} strokeWidth={1.8} />
-            <span className="text-sm font-semibold tracking-wide uppercase text-gray-500">
-              Summary
-            </span>
+          <div className="flex items-center justify-between px-5 py-6 border-b border-gray-100">
+            <div className="flex items-center gap-2 text-indigo-500">
+              <FileText size={16} strokeWidth={1.8} />
+              <span className="text-sm font-semibold tracking-wide text-gray-500">
+                Summary
+              </span>
+            </div>
+            <button
+              onClick={() => handleSummary()}
+              disabled={loading}
+              className="cursor-pointer flex items-center gap-1.5 px-3 py-1.5 rounded-md text-xs font-medium 
+                        bg-indigo-50 text-indigo-600 border border-indigo-100
+                        hover:bg-indigo-100 hover:border-indigo-200
+                        active:scale-95 transition-all duration-150 disabled:bg-gray-200 disabled:text-gray-400 disabled:pointer-events-none"
+            >
+              <RefreshCw size={12} strokeWidth={2} />
+              {result?'Regenerate':'Generate'}
+            </button>
           </div>
-          <button
-            onClick={() => handleSummary()}
-            disabled={loading}
-            className="cursor-pointer flex items-center gap-1.5 px-3 py-1.5 rounded-md text-xs font-medium 
-                      bg-indigo-50 text-indigo-600 border border-indigo-100
-                      hover:bg-indigo-100 hover:border-indigo-200
-                      active:scale-95 transition-all duration-150 disabled:bg-gray-200 disabled:text-gray-400 disabled:pointer-events-none"
-          >
-            <Sparkles size={12} strokeWidth={2} />
-            {result?'Regenerate':'Generate'}
-          </button>
-        </div>
 
         {loading && (
           <div className="flex items-center gap-2 px-5 py-6 text-sm text-gray-400">
@@ -182,7 +220,7 @@ export default function Notes() {
 
         {!loading && !result && !notes.trim() && (
           <div className="text-center py-40 border border-dashed border-gray-200 rounded-xl bg-white">
-            <Sparkles size={32} className="text-indigo-200 mx-auto mb-3" />
+            <FileText size={32} className="text-indigo-200 mx-auto mb-3" />
             <p className="text-gray-500 text-sm font-medium">No notes found</p>
             <p className="text-gray-400 text-xs mt-1">Add your study material first</p>
           </div>            
@@ -190,7 +228,7 @@ export default function Notes() {
 
         {!loading && !result && notes.trim() && (
           <div className="text-center py-16 border border-dashed border-gray-200 rounded-xl bg-white">
-            <Sparkles size={32} className="text-indigo-200 mx-auto mb-3" />
+            <FileText size={32} className="text-indigo-200 mx-auto mb-3" />
             <p className="text-gray-500 text-sm font-medium mb-4">No Summary yet</p>
             <button
               onClick={() => handleSummary()}
@@ -198,7 +236,7 @@ export default function Notes() {
                border border-indigo-100 hover:bg-indigo-100 hover:border-indigo-200 active:scale-95 transition-all duration-150"
             >
               <div className='flex gap-1.5'>
-                <Sparkles size={12} className='stroke-2 mt-0.5' />
+                <RefreshCw size={12} className='stroke-2 mt-0.5' />
                 Generate 
               </div>
             </button>

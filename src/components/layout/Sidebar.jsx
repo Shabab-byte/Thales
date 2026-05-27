@@ -1,13 +1,14 @@
 import { NavLink } from 'react-router-dom'
-import { LayoutDashboard, FileText, CreditCard, BrainCircuit, BookOpen, GitFork } from 'lucide-react'
+import { LayoutDashboard, ScrollText, CreditCard, BrainCircuit, BookOpen, Network, ListChecks, GalleryHorizontalEnd } from 'lucide-react'
 
 const navlink_data = [
   {to:'/', icon: LayoutDashboard, label:'Dashboard'},
-  {to:'/notes', icon: FileText, label:'Notes'},
+  {to:'/notes', icon: ScrollText, label:'Notes'},
   {to:'/study-guide', icon:BookOpen, label:'StudyGuide'},
-  {to:'/flashcards', icon:CreditCard, label:'Flashcards'},
+  {to:'/context', icon:ListChecks, label:'Preliminaries'},
+  {to:'/flashcards', icon:GalleryHorizontalEnd, label:'Flashcards'},
   {to:'/quiz', icon:BrainCircuit, label:'Quiz'},
-  {to:'/mindmap', icon:GitFork, label:'MindMap'},
+  {to:'/mindmap', icon:Network, label:'MindMap'},
 ]
 
 export default function Sidebar(){
