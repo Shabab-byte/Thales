@@ -12,8 +12,18 @@ export default async function handler(req, res) {
     // eslint-disable-next-line no-undef
     const apiKey = process.env.GEMINI_API_KEY; 
     const ai = new GoogleGenAI({ apiKey });
+    
+    // 💡 FORCE VERCEL TO PARSE THE BODY IF IT ARRIVES AS A STRING
+    let body = req.body;
+    if (typeof body === 'string') {
+      body = JSON.parse(body);
+    }
+    
+    const { prompt } = body;
 
-    const { prompt } = req.body;
+    if (!prompt) {
+      return res.status(400).json({ error: "No prompt provided in the request body." });
+    }
 
     // 3. Make the call to Gemini from the server
     const response = await ai.models.generateContent({
