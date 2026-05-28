@@ -369,6 +369,7 @@ export default function StudyGuide() {
           </div>
         </div>
       </div>
+      {error && <p className="text-sm text-red-500 bg-red-50 px-3 py-2 rounded-lg fixed bottom-4 right-4 z-50">{error}</p>}
     </div>
   )
 }

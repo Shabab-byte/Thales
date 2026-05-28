@@ -90,7 +90,6 @@ export default function Notes() {
       return setError('Please enter some notes first.');
     }
     setLoading(true);
-    setResult(null);
     setError(null);
     try {
       const raw = await callGemini(buildPrompt(notes));
@@ -100,7 +99,7 @@ export default function Notes() {
       setLastNotes(notes)
       setNotesChanged(false)
     } catch(e) {
-      setError('Something went wrong. Check your API key or try again.')
+      setError('Failed to generate summary. Check your API key or try again.')
       console.error(e);
     } finally {
       setLoading(false);
@@ -148,9 +147,9 @@ export default function Notes() {
           ))}
         </div>
 
-          {error && (
-            <p className="text-sm text-red-500 bg-red-50 px-3 py-2 rounded-lg fixed bottom-4 right-4 z-50">{error}</p>
-          )}
+        {error && (
+          <p className="text-sm text-red-500 bg-red-50 px-3 py-2 rounded-lg fixed bottom-4 right-4 z-50">{error}</p>
+        )}
           
       </div>
 

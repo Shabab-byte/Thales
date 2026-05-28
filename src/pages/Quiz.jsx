@@ -361,6 +361,7 @@ export default function Quiz() {
         lastNotes={lastNotes}
         lastNotesGuide={lastNotesGuide}
         quizMode={quizMode}
+        error={error}
       />
     )
   }
@@ -545,6 +546,7 @@ export default function Quiz() {
           </button>
         </div>
       )}
+      {error && <p className="text-sm text-red-500 bg-red-50 px-3 py-2 rounded-lg fixed bottom-4 right-4 z-50">{error}</p>}
     </div>
   )
 }
@@ -711,9 +713,7 @@ function ConfigScreen({
           </div>
         </div>
 
-        {error && (
-          <p className="text-sm text-red-500 bg-red-50 px-3 py-2 rounded-lg fixed bottom-4 right-4 z-50">{error}</p>
-        )}
+        {error && <p className="text-sm text-red-500 bg-red-50 px-3 py-2 rounded-lg fixed bottom-4 right-4 z-50">{error}</p>}
       </div>
     </>
   )
@@ -736,7 +736,8 @@ function ResultsScreen({
   lastQuizMetaData,
   setQuizScores,
   lastNotes,
-  lastNotesGuide
+  lastNotesGuide,
+  error,
 }) {
   const correct = answers.filter((a) => a.correct).length
   const wrong = answers.length - correct
@@ -898,6 +899,7 @@ function ResultsScreen({
           )
         })}
       </div>
+      {error && <p className="text-sm text-red-500 bg-red-50 px-3 py-2 rounded-lg fixed bottom-4 right-4 z-50">{error}</p>}
     </div>
   )
 }
