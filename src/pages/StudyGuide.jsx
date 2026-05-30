@@ -274,7 +274,7 @@ export default function StudyGuide() {
         </div>
 
         {/* Prerequisite warning */}
-        {guide.prerequisiteWarning && (
+        
         <div className="mt-3 bg-blue-50 border border-blue-200 rounded-xl px-3 py-2.5 flex items-start gap-2">
           <Info size={13} className="text-blue-500 mt-0.5 shrink-0" />
           <p className="text-xs text-blue-700 leading-normal">
@@ -289,7 +289,6 @@ export default function StudyGuide() {
             </button>
           </p>
         </div>
-        )}
       </div>
 
       {/* Two-panel body */}
