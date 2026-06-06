@@ -284,7 +284,7 @@ export default function StudyGuide() {
               className="inline-flex items-center font-semibold text-blue-600 hover:text-blue-800 underline decoration-blue-600 decoration-blue-300 hover:decoration-blue-800 transition-colors cursor-pointer"
               onClick={() => navigate('/context', { state: { autoGen: true } })}
             >
-              Read more
+              See details
               <ChevronRight size={12} className='mt-0.5'/>
             </button>
           </p>

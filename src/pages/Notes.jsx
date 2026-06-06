@@ -176,7 +176,7 @@ export default function Notes() {
                 disabled={loading}
                 className="text-xs font-medium bg-amber-500 text-white px-3 py-1.5 rounded-lg hover:bg-amber-600 transition-colors cursor-pointer disabled:bg-gray-200 disabled:text-gray-400 disabled:pointer-events-none"
               >
-                Regenerate
+                {loading ? 'Regenerating...' : 'Regenerate'}
               </button>
             </div>
           </div>
@@ -198,7 +198,7 @@ export default function Notes() {
                       active:scale-95 transition-all duration-150 disabled:bg-gray-200 disabled:text-gray-400 disabled:pointer-events-none"
           >
             <RefreshCw size={12} strokeWidth={2} />
-            {result?'Regenerate':'Generate'}
+            {result?(loading?'Regenerating...':'Regenerate'):(loading?'Generating...':'Generate')}
           </button>
         </div>
 

@@ -1,12 +1,11 @@
 // chatbox
-// write or speak your understanding and let ai fix your misunderstanding
+// write or speak your understanding and let ai fix your misunderstanding (feynmann technique)
 // endless quiz mode
-// Robust before you start + Terminology + Context section
 // MindMap+Timeline+FLOWCHART
-// Diagram+labelling+figure system
-// Comparison + Cause-Effect+Quick-Glance Table
+// Data Visualization
 // back to study-guide button for all pages
 // integration with calender + spaced repition reminder
+// socratic method + feynmann technique
 import Sidebar from './components/layout/Sidebar'
 import Dashboard from './pages/Dashboard'
 import Flashcards from './pages/Flashcards'
@@ -15,6 +14,7 @@ import Notes from './pages/Notes'
 import Quiz from './pages/Quiz'
 import StudyGuide from './pages/StudyGuide'
 import Context from './pages/Context'
+import Analysis from './pages/Analysis'
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 
 export default function App() {
@@ -31,6 +31,7 @@ export default function App() {
             <Route path='/quiz' element={<Quiz/>} />
             <Route path='/study-guide' element={<StudyGuide/>} />
             <Route path='/context' element={<Context/>} />
+            <Route path="/analysis" element={<Analysis />} />
           </Routes>
         </main>
       </div>

@@ -170,12 +170,13 @@ export default function Context() {
         <div className="flex items-start justify-between gap-4 mb-8">
           <div>
             {/* Header Section */}
-            <div className="flex items-center gap-2 mb-2">
-              <ListChecks size={20} className="text-indigo-500 mt-0.5" />
-              <h2 className="text-lg font-bold tracking-tight text-gray-800">
-                {context.subject}
-              </h2>
+            <div className="flex items-center gap-2 mb-1">
+              <ListChecks size={24} className="text-indigo-500" />
+              <h2 className="text-xl font-bold text-gray-800">Preliminaries</h2>
             </div>
+            <p className="ml-8 text-sm text-gray-400 mb-2">
+              Prerequisites, key terms, and the mental models that make this material click
+            </p>
 
             {/* Visual Metadata Badges */}
             <div className="ml-9 flex flex-wrap items-center gap-2 text-xs font-medium">

@@ -1,13 +1,14 @@
 import { NavLink } from 'react-router-dom'
-import { LayoutDashboard, ScrollText, CreditCard, BrainCircuit, BookOpen, Network, ListChecks, GalleryHorizontalEnd } from 'lucide-react'
+import { LayoutDashboard, ScrollText, CreditCard, BrainCircuit, BookOpen, Network, ListChecks, GalleryHorizontalEnd, ChartNoAxesCombined } from 'lucide-react'
 
 const navlink_data = [
   {to:'/', icon: LayoutDashboard, label:'Dashboard'},
   {to:'/notes', icon: ScrollText, label:'Notes'},
-  {to:'/study-guide', icon:BookOpen, label:'StudyGuide'},
+  {to:'/study-guide', icon:BookOpen, label:'Study Guide'},
   {to:'/context', icon:ListChecks, label:'Preliminaries'},
   {to:'/flashcards', icon:GalleryHorizontalEnd, label:'Flashcards'},
   {to:'/quiz', icon:BrainCircuit, label:'Quiz'},
+  {to:'/analysis', icon:ChartNoAxesCombined, label:'Analysis'},
   {to:'/mindmap', icon:Network, label:'MindMap'},
 ]
 
