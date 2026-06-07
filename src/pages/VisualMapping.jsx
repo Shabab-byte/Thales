@@ -1,9 +1,11 @@
-// { useLocalStorage }, mindmap first then timeline
+// { useLocalStorage }
+// timeline is trash, it should be horizontal
+// mind map is ok but needs better layout and dynamic zooming and collapse-all and expand-all buttons, horizontal view
 import { useState, useEffect, useCallback } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 import ReactFlow, { Background, Controls, Handle, Position, useNodesState, useEdgesState } from 'reactflow'
 import 'reactflow/dist/style.css'
-import { AlertTriangle, Loader2, RefreshCw, Clock, Network, Info } from 'lucide-react'
+import { AlertTriangle, Loader2, RefreshCw, Clock, Network, Info, Split } from 'lucide-react'
 import { useLocalStorage } from '../hooks/useLocalStorage'
 import { callGemini } from '../lib/gemini'
 
@@ -270,7 +272,7 @@ function MindMapView({ data }) {
     return (
       <div className="flex flex-col items-center justify-center py-20 text-center gap-3">
         <div className="w-12 h-12 bg-slate-100 rounded-xl flex items-center justify-center">
-          <Network size={22} className="text-slate-400" />
+          <Network size={22} className="text-slate-400 rotate-270" />
         </div>
         <p className="text-sm font-medium text-slate-600">No mind map data found.</p>
       </div>
@@ -407,9 +409,12 @@ export default function VisualMapping() {
       <div className="shrink-0 px-6 pt-6 pb-5">
         <div className="flex items-start justify-between gap-4">
           <div>
-            <h1 className="text-xl font-bold text-slate-800">Visual Mapping</h1>
-            <p className="text-sm text-slate-500 mt-0.5">
-              Spatial and structural views — timelines and mind maps of your notes.
+            <div className="flex items-center gap-2 mb-1">
+              <Split size={24} className="text-indigo-500 rotate-90 mt-1" />
+              <h2 className="text-xl font-bold text-gray-800">Visual Mapping</h2>
+            </div>
+            <p className="ml-8 text-sm text-gray-400 mb-2">
+               Spatial and structural views — timelines and mind maps of your notes
             </p>
           </div>
           {visuals ?
@@ -420,7 +425,7 @@ export default function VisualMapping() {
               <RefreshCw size={15} /> Regenerate
             </button>
             : null
-          }
+            }
         </div>
       </div>
 
@@ -439,7 +444,7 @@ export default function VisualMapping() {
                     : 'text-slate-500 hover:text-slate-700'
                 }`}
               >
-                <Icon size={14} />
+                <Icon size={14} className={`${id === 'mindmap' ? 'rotate-270' : ''}`} />
                 {label}
               </button>
             ))}
@@ -450,23 +455,33 @@ export default function VisualMapping() {
       {/* Scrollable content */}
       <div className="flex-1 overflow-y-auto px-6 pb-6">
         {!visuals ? (
-          <div className="flex flex-col items-center justify-center min-h-full py-16 text-center gap-4">
-            <div className="w-16 h-16 bg-indigo-50 rounded-2xl flex items-center justify-center">
-              <Network size={28} className="text-indigo-400" />
+          !notes.trim() ? (
+            <div className="text-center py-16 border border-dashed border-gray-200 rounded-xl bg-white">
+              <Split size={32} className="text-indigo-200 mx-auto mb-3 rotate-90" />
+              <p className="text-gray-500 text-sm font-medium">No notes found</p>
+              <p className="text-gray-400 text-xs mt-1">Go to Notes and add your study material first</p>
+              <button
+                onClick={() => navigate('/notes')}
+                className="mt-4 px-4 py-2 bg-indigo-600 text-white text-sm rounded-lg hover:bg-indigo-700 transition-colors cursor-pointer"
+              >
+                Add Notes
+              </button>
             </div>
-            <div>
-              <h3 className="text-slate-700 font-semibold mb-1">No visual maps yet</h3>
-              <p className="text-slate-500 text-sm max-w-sm">
-                Generate a timeline and mind map from your notes to see how everything connects spatially.
+          ) : (
+            <div className="text-center py-16 border border-dashed border-gray-200 rounded-xl bg-white">
+              <Split size={32} className="text-indigo-200 mx-auto mb-3 rotate-90" />
+              <p className="text-gray-500 text-sm font-medium mb-1">No visual maps yet</p>
+              <p className="text-gray-400 text-xs mb-5 max-w-xs mx-auto">
+                Generate a timeline and a mind map from your notes to see how everything connects spatially.
               </p>
+              <button
+                onClick={generate}
+                className="px-5 py-2.5 bg-indigo-600 text-white text-sm font-medium rounded-lg hover:bg-indigo-700 transition-colors cursor-pointer"
+              >
+                Generate Visual Maps
+              </button>
             </div>
-            <button
-              onClick={generate}
-              className="flex items-center gap-2 bg-indigo-600 text-white text-sm font-medium px-5 py-2.5 rounded-lg hover:bg-indigo-700 transition-colors cursor-pointer"
-            >
-              Generate Visual Maps
-            </button>
-          </div>
+          )
         ) : (
           <>
             {/* CSS show/hide keeps mind map pan+zoom state when switching tabs */}

@@ -171,7 +171,7 @@ export default function Context() {
           <div>
             {/* Header Section */}
             <div className="flex items-center gap-2 mb-1">
-              <ListChecks size={24} className="text-indigo-500 mt-0.5" />
+              <ListChecks size={24} className="text-indigo-500 mt-1" />
               <h2 className="text-xl font-bold text-gray-800">Preliminaries</h2>
             </div>
             <p className="ml-8 text-sm text-gray-400 mb-2">

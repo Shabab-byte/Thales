@@ -418,7 +418,7 @@ export default function Analysis() {
               <h2 className="text-xl font-bold text-gray-800">Analysis</h2>
             </div>
             <p className="ml-8 text-sm text-gray-400 mb-2">
-              Structured breakdown — comparisons, concept deep-dives, and causal chains.
+              Structured breakdown — comparisons, concept deep-dives, and causal chains
             </p>
           </div>
           {analysis ?
