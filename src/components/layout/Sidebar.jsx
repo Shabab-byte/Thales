@@ -1,5 +1,5 @@
 import { NavLink } from 'react-router-dom'
-import { LayoutDashboard, ScrollText, CreditCard, BrainCircuit, BookOpen, Network, ListChecks, GalleryHorizontalEnd, ChartNoAxesCombined } from 'lucide-react'
+import { LayoutDashboard, ScrollText, CreditCard, BrainCircuit, BookOpen, Network, ListChecks, GalleryHorizontalEnd, ChartNoAxesCombined, Split } from 'lucide-react'
 
 const navlink_data = [
   {to:'/', icon: LayoutDashboard, label:'Dashboard'},
@@ -9,7 +9,7 @@ const navlink_data = [
   {to:'/flashcards', icon:GalleryHorizontalEnd, label:'Flashcards'},
   {to:'/quiz', icon:BrainCircuit, label:'Quiz'},
   {to:'/analysis', icon:ChartNoAxesCombined, label:'Analysis'},
-  {to:'/mindmap', icon:Network, label:'MindMap'},
+  {to:'/visual-mapping', icon:Split, label:'Visual Mapping'},
 ]
 
 export default function Sidebar(){
@@ -25,7 +25,7 @@ export default function Sidebar(){
             <NavLink key={to} to={to} end={to==='/'} 
               className={({isActive}) => `flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors 
               ${isActive?'bg-indigo-50 text-indigo-600':'text-gray-600 hover:bg-gray-100 hover:text-gray-900'}`} > 
-              <Icon size={18}/>
+              {to === '/visual-mapping'? <Icon size={18} className="rotate-90"/>: <Icon size={18}/>}
               {label}
             </NavLink>
           )

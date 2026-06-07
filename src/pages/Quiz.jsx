@@ -568,8 +568,34 @@ function ConfigScreen({
   setQuizMode,
   activeStep,
   needsRegen,
-  setNeedsRegen
+  setNeedsRegen,
+  notes,
+  navigate,
 }) {
+
+  if (!notes.trim() && questions.length === 0) {
+    return (
+      <div className="p-6 max-w-2xl mx-auto">
+        <BrainCircuit size={24} className="inline text-indigo-500 mb-1" />
+        <h2 className="ml-2 inline text-xl font-bold text-gray-800 mb-0.5">Quiz</h2>
+        <p className="ml-8 text-sm text-gray-400 mb-4">
+          Conceptual questions, misconception-driven distractors, and hints to test your understanding
+        </p>
+        <div className="text-center py-16 border border-dashed border-gray-200 rounded-xl bg-white mt-8">
+          <BrainCircuit size={32} className="text-indigo-200 mx-auto mb-3" />
+          <p className="text-gray-500 text-sm font-medium">No notes found</p>
+          <p className="text-gray-400 text-xs mt-1">Go to Notes and add your study material first</p>
+          <button
+            onClick={() => navigate('/notes')}
+            className="px-4 py-2 bg-indigo-600 text-white text-sm rounded-lg hover:bg-indigo-700 transition-colors cursor-pointer mt-3"
+          >
+            Add Notes
+          </button>
+        </div>
+      </div>
+    )
+  }
+
   return (
     <>
       <div className={`shrink-0 overflow-hidden transition-all duration-300 ${ notesChanged ? 'max-h-24 opacity-100 mb-4' : 'max-h-0 opacity-0' }`}>
@@ -599,8 +625,8 @@ function ConfigScreen({
       <div className="p-6 max-w-2xl mx-auto">
         <BrainCircuit size={24} className="inline text-indigo-500 mb-1" />
         <h2 className="ml-2 inline text-xl font-bold text-gray-800 mb-0.5">Quiz</h2>
-        <p className="ml-9 text-sm text-gray-400 mb-4">
-          Test your knowledge
+        <p className="ml-8 text-sm text-gray-400 mb-4">
+          Conceptual questions, misconception-driven distractors, and hints to test your understanding
         </p>
         <div className="flex flex-col gap-2">
         {/* Quiz scope card */}
@@ -707,12 +733,11 @@ function ConfigScreen({
               ${needsRegen?'animate-[pulse-sonar_1.5s_ease-out_3]':''}
               `}
             >
-              <RefreshCw size={14} />
+              {questions.length > 0 ? <RefreshCw size={14} /> : null}
               {questions.length > 0 ? 'Regenerate' : 'Generate Quiz'}
             </button>
           </div>
         </div>
-
         {error && <p className="text-sm text-red-500 bg-red-50 px-3 py-2 rounded-lg fixed bottom-4 right-4 z-50">{error}</p>}
       </div>
     </>

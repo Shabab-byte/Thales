@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-//import { useNavigate, useLocation } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import { useLocalStorage } from '../hooks/useLocalStorage'
 import { callGemini } from '../lib/gemini'
 import {
@@ -9,8 +9,8 @@ import {
 
 const TABS = [
   { id: 'comparison', label: 'Comparison Table', icon: Table2 },
-  { id: 'concepts',   label: 'Concept Breakdown', icon: Layers2 },
   { id: 'causeEffect',label: 'Cause & Effect',    icon: GitBranch },
+  { id: 'concepts',   label: 'Concept Breakdown', icon: Layers2 },
 ]
 
 function buildAnalysisPrompt(notes) {
@@ -316,6 +316,7 @@ export default function Analysis() {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
   const [notesChanged, setNotesChanged] = useState(false)
+  const navigate = useNavigate()
 
   /*
   const location = useLocation()
@@ -420,12 +421,15 @@ export default function Analysis() {
               Structured breakdown — comparisons, concept deep-dives, and causal chains.
             </p>
           </div>
-          <button
-            onClick={generate}
-            className="flex items-center gap-2 bg-indigo-600 text-white text-sm font-medium px-4 py-2 rounded-lg hover:bg-indigo-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors cursor-pointer shrink-0"
-          >
-            <RefreshCw size={15} /> {analysis ? 'Regenerate' : 'Generate'}
-          </button>
+          {analysis ?
+            <button
+              onClick={generate}
+              className="flex items-center gap-1.5 text-xs text-gray-500 hover:text-gray-700 border border-gray-300 px-3 py-1.5 rounded-lg hover:border-gray-500 transition-colors shrink-0 cursor-pointer"
+            >
+              <RefreshCw size={15} /> Regenerate
+            </button>
+            : null
+            }
         </div>
       </div>
 
@@ -466,30 +470,33 @@ export default function Analysis() {
 
         {/* Empty state */}
         {!analysis && (
-          <div className="flex flex-col items-center justify-center min-h-full py-16 text-center gap-4">
-            <div className="w-16 h-16 bg-indigo-50 rounded-2xl flex items-center justify-center">
-              <LayoutGrid size={28} className="text-indigo-400" />
+          !notes.trim() ? (
+            <div className="text-center py-16 border border-dashed border-gray-200 rounded-xl bg-white">
+              <ChartNoAxesCombined size={32} className="text-indigo-200 mx-auto mb-3" />
+              <p className="text-gray-500 text-sm font-medium">No notes found</p>
+              <p className="text-gray-400 text-xs mt-1">Go to Notes and add your study material first</p>
+              <button
+                onClick={() => navigate('/notes')}
+                className="mt-4 px-4 py-2 bg-indigo-600 text-white text-sm rounded-lg hover:bg-indigo-700 transition-colors cursor-pointer"
+              >
+                Add Notes
+              </button>
             </div>
-            <div>
-              <h3 className="text-slate-700 font-semibold mb-1">No analysis yet</h3>
-              <p className="text-slate-500 text-sm max-w-sm">
-                Generate a structured breakdown — comparison tables, concept deep-dives, and causal chains from your notes.
+          ) : (
+            <div className="text-center py-16 border border-dashed border-gray-200 rounded-xl bg-white">
+              <ChartNoAxesCombined size={32} className="text-indigo-200 mx-auto mb-3" />
+              <p className="text-gray-500 text-sm font-medium mb-1">No analysis yet</p>
+              <p className="text-gray-400 text-xs mb-5 max-w-xs mx-auto">
+                Generate a structured breakdown — comparison tables, concept deep-dives, and causal chains from your notes
               </p>
-            </div>
-            {notes.trim() ? (
               <button
                 onClick={generate}
-                className="flex items-center gap-2 bg-indigo-600 text-white text-sm font-medium px-5 py-2.5 rounded-lg hover:bg-indigo-700 transition-colors cursor-pointer"
+                className="px-5 py-2.5 bg-indigo-600 text-white text-sm font-medium rounded-lg hover:bg-indigo-700 transition-colors cursor-pointer"
               >
-                <RefreshCw size={15} />
                 Generate Analysis
               </button>
-            ) : (
-              <p className="text-xs text-slate-400 bg-slate-50 px-4 py-2 rounded-lg border border-slate-200">
-                Add notes on the Notes page to get started.
-              </p>
-            )}
-          </div>
+            </div>
+          )
         )}
 
         {/* Tab content */}

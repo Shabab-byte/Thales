@@ -19,3 +19,8 @@
     box-shadow: 0 0 0 8px rgba(139, 92, 246, 0); 
   }
 }
+
+/* Elevate ALL React Flow nodes on hover */
+.react-flow__node:hover {
+  z-index: 1000 !important;
+}

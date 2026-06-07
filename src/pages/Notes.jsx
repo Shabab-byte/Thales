@@ -189,17 +189,19 @@ export default function Notes() {
               Summary
             </span>
           </div>
-          <button
-            onClick={() => handleSummary()}
-            disabled={loading}
-            className="cursor-pointer flex items-center gap-1.5 px-3 py-1.5 rounded-md text-xs font-medium 
-                      bg-indigo-50 text-indigo-600 border border-indigo-100
-                      hover:bg-indigo-100 hover:border-indigo-200
-                      active:scale-95 transition-all duration-150 disabled:bg-gray-200 disabled:text-gray-400 disabled:pointer-events-none"
-          >
-            <RefreshCw size={12} strokeWidth={2} />
-            {result?(loading?'Regenerating...':'Regenerate'):(loading?'Generating...':'Generate')}
-          </button>
+          {result && (
+            <button
+              onClick={() => handleSummary()}
+              disabled={loading}
+              className="cursor-pointer flex items-center gap-1.5 px-3 py-1.5 rounded-md text-xs font-medium 
+                        bg-indigo-50 text-indigo-600 border border-indigo-100
+                        hover:bg-indigo-100 hover:border-indigo-200
+                        active:scale-95 transition-all duration-150 disabled:bg-gray-200 disabled:text-gray-400 disabled:pointer-events-none"
+            >
+              <RefreshCw size={12} strokeWidth={2} />
+              {loading?'Regenerating...':'Regenerate'}
+            </button>
+          )}
         </div>
 
         {loading && (
@@ -229,16 +231,15 @@ export default function Notes() {
 
         {!loading && !result && notes.trim() && (
           <div className="text-center py-16 border border-dashed border-gray-200 rounded-xl bg-white">
-            <FileText size={32} className="text-indigo-200 mx-auto mb-3" />
-            <p className="text-gray-500 text-sm font-medium mb-4">No Summary yet</p>
+            <FileText size={32} className="text-indigo-200 mx-auto mb-2" />
+            <p className="text-gray-500 text-sm font-medium mb-2">No Summary yet</p>
+            <p className="text-gray-400 text-xs mb-2 max-w-xs mx-auto">Generate a high-density, noise-filtered summary</p>
             <button
               onClick={() => handleSummary()}
-              className="cursor-pointer gap-1.5 px-3 py-1.5 rounded-md text-xs font-medium bg-indigo-50 text-indigo-600
-               border border-indigo-100 hover:bg-indigo-100 hover:border-indigo-200 active:scale-95 transition-all duration-150"
+              className="px-5 py-2.5 bg-indigo-600 text-white text-sm font-medium rounded-lg hover:bg-indigo-700 transition-colors cursor-pointer"
             >
               <div className='flex gap-1.5'>
-                <RefreshCw size={12} className='stroke-2 mt-0.5' />
-                Generate 
+                Generate Summary
               </div>
             </button>
           </div>

@@ -6,6 +6,8 @@
 // back to study-guide button for all pages
 // integration with calender + spaced repition reminder
 // socratic method + feynmann technique
+// analysis+visuals icon and empty state fix, refresh icon for generate buttons, quiz no notes fix
+// update error message
 import Sidebar from './components/layout/Sidebar'
 import Dashboard from './pages/Dashboard'
 import Flashcards from './pages/Flashcards'
@@ -15,6 +17,7 @@ import Quiz from './pages/Quiz'
 import StudyGuide from './pages/StudyGuide'
 import Context from './pages/Context'
 import Analysis from './pages/Analysis'
+import VisualMapping from './pages/VisualMapping'
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 
 export default function App() {
@@ -32,6 +35,7 @@ export default function App() {
             <Route path='/study-guide' element={<StudyGuide/>} />
             <Route path='/context' element={<Context/>} />
             <Route path="/analysis" element={<Analysis />} />
+            <Route path="/visual-mapping" element={<VisualMapping />} />
           </Routes>
         </main>
       </div>

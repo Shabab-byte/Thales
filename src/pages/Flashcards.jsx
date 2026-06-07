@@ -203,7 +203,7 @@ export default function Flashcards() {
       <div className="p-6 max-w-2xl mx-auto">
         <GalleryHorizontalEnd size={24} className="inline text-indigo-500 mb-1" />
         <h2 className="ml-2 inline text-xl font-bold text-gray-800 mb-1">Flashcards</h2>
-        <p className="ml-9 text-sm text-gray-400">AI-generated cards from your notes</p>
+        <p className="ml-8 text-sm text-gray-400">Active recall frames, mechanism deep-dives, and contrast questions to test your memory</p>
 
         {!notes.trim() ? (
           <div className="text-center py-16 border border-dashed border-gray-200 rounded-xl bg-white mt-8">
@@ -254,7 +254,10 @@ export default function Flashcards() {
             </div>
             <div className="text-center py-16 border border-dashed border-gray-200 rounded-xl bg-white">
               <GalleryHorizontalEnd size={32} className="text-indigo-200 mx-auto mb-3" />
-              <p className="text-gray-500 text-sm font-medium mb-4">No flashcards yet</p>
+              <p className="text-gray-500 text-sm font-medium mb-2">No flashcards yet</p>
+              <p className="text-gray-400 text-xs mb-5 max-w-xs mx-auto">
+                Generate conceptual questions, mechanism-driven explanations, and comparative breakdowns that provoke active cognitive retrieval.
+              </p>
               <button
                 onClick={() => generateCards()}
                 className={`px-5 py-2.5 bg-indigo-600 text-white text-sm font-medium rounded-lg hover:bg-indigo-700 transition-colors cursor-pointer ${needsRegen?'animate-[pulse-sonar_1.5s_ease-out_3]':''}`}
@@ -301,7 +304,7 @@ export default function Flashcards() {
             <div>
               <GalleryHorizontalEnd size={24} className="inline text-indigo-500 mb-1" />
               <h2 className="ml-2 inline text-xl font-bold text-gray-800">Flashcards</h2>
-              <p className="ml-9 text-sm text-gray-400">{cards.length} cards generated</p>
+              <p className="ml-8 text-sm text-gray-400">{cards.length} cards generated</p>
             </div>
             <div className="flex gap-2">
               <button
@@ -344,13 +347,14 @@ export default function Flashcards() {
               {activeStep?.title}
             </button>
           </div>
-          <div className='flex items-center gap-2 mb-7'>
+          <div className='flex items-center gap-2 mb-5 pb-1 border-b border-gray-200'>
             <p className="text-xs text-gray-400 ml-2 leading-relaxed">
               {cardsMode === 'section'
                 ? `New cards will focus on "${activeStep?.title}" section Only.`
                 : 'New cards will be drawn from the entire note.'}
             </p>
           </div>
+          <p className="text-xs text-gray-400 ml-2 leading-relaxed mb-2">Active recall frames, mechanism deep-dives, and contrast questions to test your memory:</p>
           <div className="flex flex-col gap-3">
             {cards.map((card, i) => (
               <PreviewCard key={card.front + card.back} card={card} index={i} />

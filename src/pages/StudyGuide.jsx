@@ -550,7 +550,7 @@ function EmptyState({ notes, error, onGenerate, navigate }) {
     <div className="p-6 max-w-2xl mx-auto">
       <BookOpen size={24} className="inline text-indigo-500 mb-1" />
       <h2 className="ml-2 inline text-xl font-bold text-gray-800 mb-1">Study Guide</h2>
-      <p className="text-sm text-gray-400 mb-8 ml-9">
+      <p className="text-sm text-gray-400 mb-8 ml-8">
         A personalised, step-by-step plan to master your material
       </p>
 

@@ -171,7 +171,7 @@ export default function Context() {
           <div>
             {/* Header Section */}
             <div className="flex items-center gap-2 mb-1">
-              <ListChecks size={24} className="text-indigo-500" />
+              <ListChecks size={24} className="text-indigo-500 mt-0.5" />
               <h2 className="text-xl font-bold text-gray-800">Preliminaries</h2>
             </div>
             <p className="ml-8 text-sm text-gray-400 mb-2">
@@ -179,7 +179,7 @@ export default function Context() {
             </p>
 
             {/* Visual Metadata Badges */}
-            <div className="ml-9 flex flex-wrap items-center gap-2 text-xs font-medium">
+            <div className="ml-8 flex flex-wrap items-center gap-2 text-xs font-medium">
               <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-amber-50 text-amber-700 border border-amber-200/60">
                 <span className="w-1.5 h-1.5 rounded-full bg-amber-500" />
                 {context.prerequisites?.length || 0} Prerequisites
