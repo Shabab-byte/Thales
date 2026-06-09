@@ -148,9 +148,10 @@ export default function Quiz() {
 
   useEffect(() => {
     if (!questions.length || !notes.trim()) return
-    if (lastNotes !== notes && lastNotes !== lastNotesGuide ) {
+    if (lastNotes !== notes) {
       // eslint-disable-next-line react-hooks/set-state-in-effect
       setNotesChanged(true)
+      setQuizMode('full')
     } else setNotesChanged(false)
   }, [notes, questions, lastNotes, lastNotesGuide])
   
@@ -338,6 +339,7 @@ export default function Quiz() {
         activeStep={activeStep}
         needsRegen={needsRegen}
         setNeedsRegen={setNeedsRegen}
+        lastNotesGuide={lastNotesGuide}
       />
     )
   }
@@ -571,6 +573,7 @@ function ConfigScreen({
   setNeedsRegen,
   notes,
   navigate,
+  lastNotesGuide,
 }) {
 
   if (!notes.trim() && questions.length === 0) {
@@ -649,14 +652,14 @@ function ConfigScreen({
             </button>
             <button
               onClick={() => {setQuizMode('section'); setNeedsRegen(false); setTimeout(() => setNeedsRegen(true), 20);}}
-               disabled={quizMode==='section' || !activeStep}
-              className={`flex-auto py-1.5 px-3 text-xs font-medium rounded-md transition-all duration-200 ${
+              disabled={quizMode==='section' || !activeStep || notes !== lastNotesGuide}
+              className={`flex-auto py-1.5 px-3 text-xs font-medium rounded-md transition-all duration-200 disabled:pointer-events-none ${
                 quizMode === 'section'
                   ? 'bg-white text-indigo-500 shadow-sm'
                   : !activeStep ? 'text-gray-500': 'text-gray-500 hover:text-gray-700 cursor-pointer hover:bg-gray-200/60'
               }`}
             >
-              {activeStep?.title}
+              {notes === lastNotesGuide && activeStep?.title}
             </button>
           </div>
           <p className="text-xs text-gray-400 mt-2.5 leading-relaxed">
