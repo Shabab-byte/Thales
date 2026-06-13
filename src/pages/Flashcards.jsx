@@ -1,6 +1,5 @@
 // realoading makes you lose results or progress during reviewing.
 // need conceptual questions and other short questions besides just simple memory questions
-// change scope to full ntoes if notes are changed
 import { useState, useRef, useEffect } from 'react'
 import { useNavigate, useLocation } from 'react-router-dom'
 import { useLocalStorage } from '../hooks/useLocalStorage'

@@ -2,12 +2,13 @@
 // timeline is trash, it should be horizontal
 // mind map is ok but needs better layout and dynamic zooming and collapse-all and expand-all buttons, horizontal view
 import { useState, useEffect, useCallback } from 'react'
-import { useLocation, useNavigate } from 'react-router-dom'
-import ReactFlow, { Background, Controls, Handle, Position, useNodesState, useEdgesState } from 'reactflow'
+import { useNavigate } from 'react-router-dom'
+import ReactFlow, { Panel, useReactFlow, ReactFlowProvider, Background, Controls, Handle, Position, useNodesState, useEdgesState } from 'reactflow'
 import 'reactflow/dist/style.css'
-import { AlertTriangle, Loader2, RefreshCw, Clock, Network, Info, Split } from 'lucide-react'
+import { AlertTriangle, Loader2, RefreshCw, Clock, Network, Info, Split, ChevronsUpDown, ChevronsDownUp } from 'lucide-react'
 import { useLocalStorage } from '../hooks/useLocalStorage'
 import { callGemini } from '../lib/gemini'
+import { MarkerType } from '@xyflow/react'
 
 function buildVisualsPrompt(notes) {
   return `You are an expert study assistant that generates structured visual learning data. Analyse the following study notes and return ONLY a valid JSON object — no markdown fences, no backticks, no preamble, no explanation.
@@ -69,7 +70,7 @@ function layoutTree(node, x = 0, startY = 0, allNodes = [], allEdges = []) {
   const HGAP = 260
   const VGAP = 88
   const leaves = countLeaves(node)
-  const nodeY = startY + (leaves * VGAP) / 2 - VGAP / 2
+  const nodeY = startY + (leaves-1) * VGAP / 2
 
   allNodes.push({
     id: node.id,
@@ -86,21 +87,22 @@ function layoutTree(node, x = 0, startY = 0, allNodes = [], allEdges = []) {
 
   let currentY = startY
   for (const child of (node.children ?? [])) {
-    const childLeaves = countLeaves(child)
-    layoutTree(child, x + HGAP, currentY, allNodes, allEdges)
-    allEdges.push({
+    allEdges.push({ // label?
       id: `e-${node.id}-${child.id}`,
       source: node.id,
       target: child.id,
-      type: 'smoothstep',
+      type: 'default',
       style: { stroke: '#cbd5e1', strokeWidth: 1.5 },
+      markerEnd: { type: MarkerType.Arrow },  
     })
+    layoutTree(child, x + HGAP, currentY, allNodes, allEdges)
+    const childLeaves = countLeaves(child)
     currentY += childLeaves * VGAP
   }
 
   return { nodes: allNodes, edges: allEdges }
 }
-
+/*
 function getDescendantIds(nodeId, tree) {
   const result = new Set()
 
@@ -119,6 +121,7 @@ function getDescendantIds(nodeId, tree) {
   findAndCollect(tree)
   return result
 }
+*/
 
 // ─── Custom Mind Map Node (must be defined outside parent component) ──
 
@@ -139,7 +142,7 @@ function MindMapNode({ data }) {
         <Handle
           type="target"
           position={Position.Left}
-          style={{ background: '#94a3b8', width: 6, height: 6, border: 'none' }}
+          style={{ background: '#94a3b8', width: 6, height: 6, border: 'none', opacity: 0 }}
         />
       )}
 
@@ -158,8 +161,8 @@ function MindMapNode({ data }) {
 
       {/* Hover tooltip */}
       {hovered && data.description && (
-        <div className="absolute left-full ml-3 top-0 z-50 w-56 bg-slate-800 text-white text-xs rounded-xl p-3 shadow-xl leading-relaxed pointer-events-none z-50">
-          <div className="absolute -left-1.5 top-3 w-3 h-3 bg-slate-800 rotate-45" />
+        <div className="absolute mr-3 right-full ml-3 top-0 z-50 w-56 bg-slate-800 opacity-90 text-white text-xs rounded-xl p-3 shadow-xl leading-relaxed pointer-events-none z-50">
+          <div className="absolute -right-0.5 top-3 w-3 h-3 bg-slate-800 rotate-45" />
           {data.description}
         </div>
       )}
@@ -168,7 +171,7 @@ function MindMapNode({ data }) {
         <Handle
           type="source"
           position={Position.Right}
-          style={{ background: '#94a3b8', width: 6, height: 6, border: 'none' }}
+          style={{ background: '#94a3b8', width: 6, height: 6, border: 'none', opacity: 0 }}
         />
       )}
     </div>
@@ -176,6 +179,16 @@ function MindMapNode({ data }) {
 }
 
 const nodeTypes = { mindMapNode: MindMapNode }
+
+function pruneTree(node, collapsed) {
+  if (collapsed.has(node.id)) {
+    return { ...node, children: [] }  // collapsed — act as if no children
+  }
+  return {
+    ...node,
+    children: (node.children ?? []).map(child => pruneTree(child, collapsed))
+  }
+}
 
 // ─── Timeline View ────────────────────────────────────────────────
 
@@ -236,12 +249,15 @@ function MindMapView({ data }) {
   const [collapsed, setCollapsed] = useState(new Set())
   const [nodes, setNodes, onNodesChange] = useNodesState([])
   const [edges, setEdges, onEdgesChange] = useEdgesState([])
+  const { fitView } = useReactFlow()
 
-  useEffect(() => {
+  /* 
+    useEffect(() => {
     if (!data) return
 
-    const { nodes: allNodes, edges: allEdges } = layoutTree(data)
-
+    const prunedTree = pruneTree(data, collapsed)
+    const { nodes: allNodes, edges: allEdges } = layoutTree(prunedTree) 
+    
     const hiddenIds = new Set()
     collapsed.forEach(id => {
       getDescendantIds(id, data).forEach(descId => hiddenIds.add(descId))
@@ -257,6 +273,24 @@ function MindMapView({ data }) {
     setEdges(visibleEdges)
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [data, collapsed])
+  */
+  useEffect(() => {
+    if (!data) return
+
+    const prunedTree = pruneTree(data, collapsed)
+    const { nodes: allNodes, edges: allEdges } = layoutTree(prunedTree)
+
+    setNodes(allNodes.map(n => ({
+      ...n,
+      data: {
+        ...n.data,
+        isCollapsed: collapsed.has(n.id),
+        hasChildren: n.data.hasChildren || collapsed.has(n.id),
+      }
+    })))
+    setEdges(allEdges)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [data, collapsed])
 
   const handleNodeClick = useCallback((_, node) => {
     if (!node.data.hasChildren) return
@@ -266,8 +300,33 @@ function MindMapView({ data }) {
       else next.add(node.id)
       return next
     })
-  }, [])
 
+    setTimeout(() => {
+      fitView({ duration: 600, padding: 0.25 })
+    }, 50)
+  }, [fitView])
+
+  const collapseAll = useCallback(() => {
+    const parentIds = new Set(
+      nodes
+        .filter(n => n.data.hasChildren && n.id!=='root')
+        .map(n => n.id)
+    )
+    setCollapsed(parentIds)
+
+      setTimeout(() => {
+      fitView({ duration: 600, padding: 0.25 })
+    }, 50)
+  }, [nodes, fitView])
+
+  const expandAll = useCallback(() => {
+    setCollapsed(new Set())
+
+      setTimeout(() => {
+      fitView({ duration: 600, padding: 0.25 })
+    }, 50)
+  }, [fitView])
+  
   if (!data) {
     return (
       <div className="flex flex-col items-center justify-center py-20 text-center gap-3">
@@ -280,7 +339,11 @@ function MindMapView({ data }) {
   }
 
   return (
-    <div className="rounded-xl border border-slate-200 overflow-hidden" style={{ height: 520 }}>
+    <div className="rounded-xl border border-slate-200 overflow-y" style={{ height: 520 }}>
+      <div className="px-4 py-2.5 bg-slate-50 border-t border-slate-200 flex items-center gap-1">
+        <Info size={12} className="text-slate-400 shrink-0" />
+        <p className="text-xs text-slate-400">Click a node to expand or collapse its children. Hover to read descriptions. Tip: If it gets too cluttered, use the 'Collapse All' button on the top-right corner.</p>
+      </div>
       <ReactFlow
         nodes={nodes}
         edges={edges}
@@ -291,15 +354,51 @@ function MindMapView({ data }) {
         fitView
         fitViewOptions={{ padding: 0.25 }}
         minZoom={0.3}
-        maxZoom={2}
+        maxZoom={1.2}
+        preventScrolling={false}
       >
         <Background color="#e2e8f0" gap={20} size={1} />
-        <Controls showInteractive={false} />
-      </ReactFlow>
-      <div className="px-4 py-2.5 bg-slate-50 border-t border-slate-200 flex items-center gap-2">
-        <Info size={12} className="text-slate-400 shrink-0" />
-        <p className="text-xs text-slate-400">Click a node to expand or collapse its children. Hover to read descriptions.</p>
-      </div>
+        <Controls showInteractive={true} style={{ bottom: '26px' }}/>
+        <Panel 
+          position="top-right" 
+          style={{ top: '-12px', right: '12px',}}
+          className="flex gap-3"
+        >
+          {/* Expand All Button */}
+          <div className="relative group flex items-center justify-center">
+            <button
+              onClick={expandAll}
+              aria-label="Expand All"
+              className="flex items-center justify-center w-10 h-10 bg-white text-indigo-500 rounded-lg shadow-md border border-indigo-100 transition-all duration-200 hover:bg-indigo-600 hover:text-white hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-indigo-400 focus:ring-offset-1"
+            >
+              <ChevronsUpDown size={22} strokeWidth={1.5} />
+            </button>
+            
+            {/* Custom Tooltip */}
+            <div className="absolute top-full left-1/2 -translate-x-1/2 mt-2 w-max px-2.5 py-1.5 bg-slate-800 text-white text-xs font-medium rounded-md shadow-sm opacity-0 transition-opacity duration-200 group-hover:opacity-100 pointer-events-none z-50">
+              Expand All
+              {/* Tooltip Arrow */}
+            </div>
+          </div>
+
+          {/* Collapse All Button */}
+          <div className="relative group flex items-center justify-center">
+            <button
+              onClick={collapseAll}
+              aria-label="Collapse All"
+              className="flex items-center justify-center w-10 h-10 bg-white text-indigo-500 rounded-lg shadow-md border border-indigo-100 transition-all duration-200 hover:bg-indigo-600 hover:text-white hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-indigo-400 focus:ring-offset-1"
+            >
+              <ChevronsDownUp size={22} strokeWidth={1.5} />
+            </button>
+            
+            {/* Custom Tooltip */}
+            <div className="absolute top-full left-1/2 -translate-x-1/2 mt-2 w-max px-2.5 py-1.5 bg-slate-800 text-white text-xs font-medium rounded-md shadow-sm opacity-0 transition-opacity duration-200 group-hover:opacity-100 pointer-events-none z-50">
+              Collapse All
+              {/* Tooltip Arrow */}            
+            </div>
+          </div>
+        </Panel>
+      </ReactFlow>      
     </div>
   )
 }
@@ -312,15 +411,15 @@ const TABS = [
 ]
 
 export default function VisualMapping() {
-  const [notes]                         = useLocalStorage('knowtico-notes', '')
-  const [visuals, setVisuals]           = useLocalStorage('knowtico-visuals', null)
-  const [lastNotes, setLastNotes]       = useLocalStorage('knowtico-last-notes-visuals', '')
-  const [activeTab, setActiveTab]       = useState('mindmap')
-  const [loading, setLoading]           = useState(false)
-  const [error, setError]               = useState(null)
+  const [notes] = useLocalStorage('knowtico-notes', '')
+  const [visuals, setVisuals] = useLocalStorage('knowtico-visuals', null)
+  const [lastNotes, setLastNotes] = useLocalStorage('knowtico-last-notes-visuals', '')
+  const [activeTab, setActiveTab] = useState('mindmap')
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState(null)
   const [notesChanged, setNotesChanged] = useState(false)
 
-  const location = useLocation()
+  //const location = useLocation()
   const navigate = useNavigate()
 
   // Notes change detection
@@ -330,7 +429,7 @@ export default function VisualMapping() {
     if (lastNotes !== notes) setNotesChanged(true)
     else setNotesChanged(false)
   }, [notes, visuals, lastNotes])
-
+  /*
   // Auto-generate on navigation
   useEffect(() => {
     if (visuals && lastNotes === notes) return
@@ -340,7 +439,7 @@ export default function VisualMapping() {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
-
+  */
   async function generate() {
     if (!notes.trim()) {
       setError('No notes found. Add notes first.')
@@ -489,7 +588,7 @@ export default function VisualMapping() {
               <TimelineView data={visuals.timeline} />
             </div>
             <div className={activeTab === 'mindmap' ? 'block' : 'hidden'}>
-              <MindMapView data={visuals.mindmap} />
+              <ReactFlowProvider> <MindMapView data={visuals.mindmap} /> </ReactFlowProvider>
             </div>
           </>
         )}
